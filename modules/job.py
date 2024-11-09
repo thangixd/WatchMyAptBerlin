@@ -1,4 +1,4 @@
-from module.scraper import WebScraper, DataProcessor
+from modules.scraper import WebScraper, DataProcessor
 
 class ScrapingJob:
     def __init__(self, base_url, target_class, title_class, meta_class, tags_class, properties_class, price_class):

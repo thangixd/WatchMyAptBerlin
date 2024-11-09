@@ -1,5 +1,5 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
-from module.job import ScrapingJob
+from modules.job import ScrapingJob
 
 last_data = None
 
@@ -13,7 +13,7 @@ def run_scraping_job():
                       "article__meta",
                       "article__tags",
                       "article__properties",
-                      "article__price")
+                      "article__price-tag")
     job.run()
 
     current_data = job.processor.get_data()
