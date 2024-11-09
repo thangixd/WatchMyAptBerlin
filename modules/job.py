@@ -1,10 +1,10 @@
 from modules.scraper import WebScraper, DataProcessor
 
 class ScrapingJob:
-    def __init__(self, base_url, target_class, title_class, meta_class, tags_class, properties_class, price_class):
-        self.scraper = WebScraper(base_url, target_class, title_class, meta_class, tags_class, properties_class, price_class)
+    def __init__(self, base_url, target_class, page_number, title_class, meta_class, tags_class, properties_class, price_class):
+        self.scraper = WebScraper(base_url, target_class, page_number, title_class, meta_class, tags_class, properties_class, price_class)
         self.processor = DataProcessor()
-        self.page = 1
+        self.page = page_number
 
     def run(self):
         while True:

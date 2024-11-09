@@ -1,11 +1,15 @@
 import urllib.request
 from bs4 import BeautifulSoup
 import pandas as pd
+from fake_useragent import UserAgent
+
+
 
 class WebScraper:
-    def __init__(self, base_url, target_class, title_class=None, meta_class=None, tags_class=None, properties_class=None, price_class=None):
+    def __init__(self, base_url, target_class, pager_number=None, title_class=None, meta_class=None, tags_class=None, properties_class=None, price_class=None):
         self.base_url = base_url
         self.target_class = target_class
+        self.pager_number = pager_number
         self.title_class = title_class
         self.meta_class = meta_class
         self.tags_class = tags_class
@@ -13,9 +17,23 @@ class WebScraper:
         self.price_class = price_class
 
 
-    def fetch_page(self, page_number):
-        url = f'{self.base_url}?page={page_number}'
-        response = urllib.request.urlopen(url)
+    def fetch_page(self, page_number=None):
+        if page_number is None:
+            url = self.base_url
+        else:
+            url = f'{self.base_url}?page={page_number}'
+
+        ua = UserAgent()
+        random_ua = ua.random
+        print(random_ua)
+        request_headers = {
+            'user-agent': random_ua
+        }
+
+
+        request = urllib.request.Request(url, headers=request_headers)
+        print(request)
+        response = urllib.request.urlopen(request)
         html = response.read()
         return BeautifulSoup(html, 'html.parser')
 
@@ -31,6 +49,7 @@ class WebScraper:
             tags = tag.find_next(class_=self.tags_class)
             properties = tag.find_next(class_=self.properties_class)
             price_tag = tag.find_next(class_=self.price_class)
+
 
             article = {
                 "Meta": meta.text if meta else "",
