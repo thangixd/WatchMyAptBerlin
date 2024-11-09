@@ -7,9 +7,13 @@ last_data = None
 def run_scraping_job():
     global last_data
 
-    base_url = 'https://immosuche.degewo.de/de/search'
-    target_class = "article-list__item"
-    job = ScrapingJob(base_url, target_class)
+    job = ScrapingJob('https://immosuche.degewo.de/de/search',
+                      "article-list__item",
+                      "article__title",
+                      "article__meta",
+                      "article__tags",
+                      "article__properties",
+                      "article__price")
     job.run()
 
     current_data = job.processor.get_data()
@@ -27,7 +31,6 @@ def run_scraping_job():
 
 
 if __name__ == "__main__":
-
     scheduler = BlockingScheduler()
     scheduler.add_job(run_scraping_job, 'interval', seconds=30)
     scheduler.start()

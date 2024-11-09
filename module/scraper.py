@@ -3,9 +3,15 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 class WebScraper:
-    def __init__(self, base_url, target_class):
+    def __init__(self, base_url, target_class, title_class=None, meta_class=None, tags_class=None, properties_class=None, price_class=None):
         self.base_url = base_url
         self.target_class = target_class
+        self.title_class = title_class
+        self.meta_class = meta_class
+        self.tags_class = tags_class
+        self.properties_class = properties_class
+        self.price_class = price_class
+
 
     def fetch_page(self, page_number):
         url = f'{self.base_url}?page={page_number}'
@@ -20,11 +26,11 @@ class WebScraper:
 
         articles = []
         for tag in soup.find_all(class_=self.target_class):
-            meta = tag.find_next(class_="article__meta")
-            title = tag.find_next(class_="article__title")
-            tags = tag.find_next(class_="article__tags")
-            properties = tag.find_next(class_="article__properties")
-            price_tag = tag.find_next(class_="article__price-tag")
+            meta = tag.find_next(class_=self.meta_class)
+            title = tag.find_next(class_=self.title_class)
+            tags = tag.find_next(class_=self.tags_class)
+            properties = tag.find_next(class_=self.properties_class)
+            price_tag = tag.find_next(class_=self.price_class)
 
             article = {
                 "Meta": meta.text if meta else "",
