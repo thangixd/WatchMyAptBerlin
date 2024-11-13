@@ -17,6 +17,9 @@ BOT_USERNAME: Final = '@WatchMyApt_bot'
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Hi! I will help you get the best Apartment in Berlin. Send /help for more info.')
 
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('You can enter: Degewo, WBM or Gewobag for the apartments offered by the respective providers')
+
 
 def handles_response(text: str) -> str:
     text = text.lower()
@@ -27,7 +30,7 @@ def handles_response(text: str) -> str:
     elif 'gewobag' in text:
         return 'Gewobag'
     else:
-        return 'Was meinst du?'
+        return 'Sorry I don\'t understand.'
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -113,6 +116,7 @@ if __name__ == "__main__":
     app = Application.builder().token(bot_token).build()
 
     app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("help", help_command))
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
     app.add_error_handler(error)
 
