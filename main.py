@@ -15,15 +15,17 @@ def run_scraping_job(housing_key):
     current_data = job.processor.clean_data(current_data)
     print(current_data)
 
-    if last_data is not None:
-        if not current_data.equals(last_data):
-            print("Data has changed!")
-            print("Differences:")
-            print(current_data.compare(last_data))
-        else:
-            print("No change in data.")
+    # if last_data is not None:
+    #     if not current_data.equals(last_data):
+    #         print("Data has changed!")
+    #         print("Differences:")
+    #         print(current_data.compare(last_data))
+    #     else:
+    #         print("No change in data.")
 
-    last_data = current_data
+    #last_data = current_data
+
+    return current_data
 
 if __name__ == "__main__":
     run_scraping_job('Degewo')
