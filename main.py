@@ -13,6 +13,9 @@ def run_scraping_job(housing_key):
     current_data = job.processor.get_data()
     print(current_data)
 
+    current_data = job.processor.clean_data(current_data)
+    print(current_data)
+
     if last_data is not None:
         if not current_data.equals(last_data):
             print("Data has changed!")

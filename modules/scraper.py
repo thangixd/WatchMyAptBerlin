@@ -78,5 +78,28 @@ class DataProcessor:
         for i, article in enumerate(articles):
             self.df.loc[start_index + i] = article
 
+    def clean_data(self, df):
+        # Clean and format 'Price-Tag' column
+        df['Price-Tag'] = (
+            df['Price-Tag']
+            .str.extract(r'([\d\.,]+)')[0]
+            .str.replace('.', '', regex=False)
+            .str.replace(',', '.', regex=False)
+            .astype(float)
+            .apply(lambda x: f"{x:.2f} Euro")
+        )
+
+        # Clean and format 'Properties' column
+        df['Properties'] = (
+            df['Properties']
+            .str.extract(r'(\d{1,3}(?:[.,]\d{1,2})?)\s*m²')[0]
+            .str.replace(',', '.', regex=True)
+            .astype(float)
+            .apply(lambda x: f"{x:.2f} m²")
+        )
+
+        return df
+
     def get_data(self):
         return self.df
+
