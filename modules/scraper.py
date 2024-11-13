@@ -65,17 +65,13 @@ class WebScraper:
         return articles
 
 
-def configure_display_options():
-    pd.set_option('display.max_rows', None)
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.width', None)
-    pd.set_option('display.max_colwidth', None)
-
-
 class DataProcessor:
     def __init__(self):
         self.df = pd.DataFrame(columns=["Meta", "Title", "Tag", "Properties", "Price-Tag"])
-        configure_display_options()
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.width', None)
+        pd.set_option('display.max_colwidth', None)
 
     def add_data(self, articles, start_index=0):
         """Adds scraped articles to the DataFrame."""
