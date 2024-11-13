@@ -1,6 +1,7 @@
 import os
 from typing import Final
 from telegram import Update
+import pandas as pd
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from main import run_scraping_job
 
@@ -29,6 +30,8 @@ def handles_response(text: str) -> str:
         return 'WBM'
     elif 'gewobag' in text:
         return 'Gewobag'
+    elif 'live' in text:
+        return 'live'
     else:
         return 'Sorry I don\'t understand.'
 
@@ -100,6 +103,33 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         response_text = code_html
 
+    elif response_key == 'live':
+        # Thread erstellen und Parameter übergeben
+        #global live_ticker_thread
+
+        #if live_ticker_thread is None:
+        # thread = threading.Thread(target=live_ticker, args=(update, context))
+        #
+        # # Thread starten
+        # thread.start()
+        # #
+        # thread.join()
+        await live_ticker(update, context)
+        response_text = "live-ticker started"
+        #await live_ticker(update, context)
+        #else:
+        #    response_text = "live-ticker already running"
+
+    # elif response_key == 'end ticker':
+    #     global live_ticker_thread
+    #     if live_ticker_thread is not None:
+    #         global end_live_ticker_thread
+    #         end_live_ticker_thread = True
+    #         response_text = "live-ticker ended"
+    #     else:
+    #         response_text = "live-ticker not running"
+
+
     else:
         response_text = response_key
 
@@ -109,6 +139,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update "{update}" caused error "{context.error}"')
+
+
+
+
 
 
 if __name__ == "__main__":
