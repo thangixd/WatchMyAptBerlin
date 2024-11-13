@@ -25,5 +25,7 @@ def run_scraping_job(housing_key):
 
     last_data = current_data
 
+    return current_data
+
 if __name__ == "__main__":
     run_scraping_job('Degewo')
