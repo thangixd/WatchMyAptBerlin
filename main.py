@@ -1,4 +1,3 @@
-from modules.job import WBMScrapingJob, DegewoScrapingJob
 from config import housing_association
 
 
