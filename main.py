@@ -11,7 +11,6 @@ def run_scraping_job(housing_key):
     job.run()
 
     current_data = job.processor.get_data()
-    print(current_data)
 
     current_data = job.processor.clean_data(current_data)
     print(current_data)
