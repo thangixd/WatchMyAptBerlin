@@ -5,11 +5,7 @@ last_data = None
 
 def run_scraping_job(housing_key):
     global last_data
-
-    # Get the configuration for the selected housing association
     config = housing_association[housing_key]
-
-    # Initialize the ScrapingJob using parameters from the dictionary
 
     job = config[1](config[0], config[2], config[3], config[4], config[5], config[6], config[7], config[8])
     job.run()
