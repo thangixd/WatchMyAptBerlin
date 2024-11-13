@@ -2,9 +2,7 @@ import os
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import pandas as pd
 from main import run_scraping_job
-from tabulate import tabulate
 
 bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
 
@@ -47,16 +45,42 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         response_key: str = handles_response(text)
 
-
     if response_key == 'Gewobag':
         df = run_scraping_job('Gewobag')
 
-        if df is not None:
-            df = df.head(10)
-            df = df.drop(columns=['Tag'], errors='ignore')
-            response_text = tabulate(df.values, tablefmt='plain')
-        else:
-            response_text = "No data available for Degewo at the moment."
+        gewobag_link = "https://www.gewobag.de"
+        code_html = f'Here are the offers from {gewobag_link}:'
+
+        if not df.empty:
+            # Clean up the addresses because gewobag html sucks
+            df['Meta'] = df['Meta'].str.replace(r'^Adresse', '', regex=True)
+            df['Meta'] = df['Meta'].str.replace(r'(Berlin).*', r'\1', regex=True)
+
+            for i in range(len(df)):
+                code_html += (
+                    f'\n\n Address: {df["Meta"].iloc[i]}'
+                    f'\n Properties: {df["Properties"].iloc[i]}'
+                    f'\n Price: {df["Price-Tag"].iloc[i]}\n'
+                )
+
+        response_text = code_html
+
+    elif response_key == 'WBM':
+        df = run_scraping_job('WBM')
+
+        WBM_link = "https://www.WBM.de"
+        code_html = f'Here are the offers from {WBM_link}:'
+
+        if not df.empty:
+             for i in range(len(df)):
+                code_html += (
+                    f'\n\n Address: {df["Meta"].iloc[i]}'
+                    f'\n Properties: {df["Properties"].iloc[i]}'
+                    f'\n Price: {df["Price-Tag"].iloc[i]}\n'
+                )
+
+        response_text = code_html
+
     else:
         response_text = response_key
 
