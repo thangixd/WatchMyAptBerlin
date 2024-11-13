@@ -81,6 +81,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         response_text = code_html
 
+    elif response_key == 'Degewo':
+        df = run_scraping_job('Degewo')
+
+        degewo_link = "https://www.degewo.de"
+        code_html = f'Here are the offers from {degewo_link}:'
+
+        if not df.empty:
+            for i in range(len(df)):
+                code_html += (
+                    f'\n\n Address: {df["Meta"].iloc[i]}'
+                    f'\n Properties: {df["Properties"].iloc[i]}'
+                    f'\n Price: {df["Price-Tag"].iloc[i]}\n'
+                )
+
+        response_text = code_html
+
     else:
         response_text = response_key
 
