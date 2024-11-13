@@ -1,29 +1,6 @@
 from modules.job import WBMScrapingJob, DegewoScrapingJob
+from config import housing_association
 
-housing_association = {
-    'WBM': [
-        'https://www.wbm.de/wohnungen-berlin/angebote/',
-        WBMScrapingJob,
-        "openimmo-search-list-item",
-        None,
-        "imageTitle",
-        "address",
-        "check-property-list",
-        "main-property-size",
-        "main-property-rent"
-    ],
-    'Degewo': [
-        'https://immosuche.degewo.de/de/search',
-        DegewoScrapingJob,
-        "article-list__item",
-        1,
-        "article__title",
-        "article__meta",
-        "article__tags",
-        "article__properties",
-        "article__price-tag"
-    ]
-}
 
 last_data = None
 
