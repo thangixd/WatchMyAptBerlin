@@ -161,7 +161,7 @@ async def start_live_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     if live_ticker_set is False:
         context.job_queue.run_repeating(
             live_ticker,
-            interval=10,
+            interval=150,
             first=0,
             chat_id=update.effective_message.chat_id,
             name='live_ticker')
