@@ -62,8 +62,8 @@ async def live_ticker(context: ContextTypes.DEFAULT_TYPE):
             code_html += (
                 f'\n\n Provider: {assoc_name}'
                 f'\n Address: {result["Meta"].values[0]}'
-                f'\n Properties: {result["Properties"].values[0]}'
-                f'\n Price: {result["Price-Tag"].values[0]}\n'
+                f'\n Properties: {result["Properties"].values[0]} m²'
+                f'\n Price: {result["Price-Tag"].values[0]} Euro\n'
             )
 
     response_text = code_html
