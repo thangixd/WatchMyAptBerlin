@@ -32,6 +32,8 @@ def handles_response(text: str) -> str:
         return 'Gewobag'
     elif 'live' in text:
         return 'live'
+    elif 'end ticker' in text:
+        return 'end ticker'
     else:
         return 'Sorry I don\'t understand.'
 
@@ -148,7 +150,8 @@ async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
 if __name__ == "__main__":
 
     app = Application.builder().token(bot_token).build()
-
+    app.add_handler(CommandHandler("start_live_ticker", start_live_ticker))
+    app.add_handler(CommandHandler("stop_live_ticker", stop_live_ticker))
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
