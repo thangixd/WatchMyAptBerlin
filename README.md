@@ -57,7 +57,7 @@ To get started with **WatchMyAptBerlin**, follow these steps:
 
 ### Proxy Support
 
-If you need to use a proxy, you can set the proxy configuration in the `scraper.py` file.
+If you need to use a proxy, you can set the proxy configuration in the `modules\scraper.py` file.
 
 ### Customization
 
