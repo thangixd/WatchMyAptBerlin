@@ -61,7 +61,7 @@ If you need to use a proxy, you can easily configure it in the modules/scraper.p
 
 ### Customization
 
-You have the option to tweak certain parameters in the code, including the frequency of checks, the type of apartments you're looking for, and more. Feel free to explore the code to tailor it to your needs.
+You can customize various parameters in the code to suit your needs, such as adjusting the frequency of updates (e.g., the default live ticker interval is set to 150 seconds), selecting specific apartment types, and more. Feel free to explore the code and modify these settings to better align with your preferences.
 
 ### Contributing
 
