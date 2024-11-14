@@ -1,7 +1,6 @@
 import os
 from typing import Final
 
-import pandas as pd
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -20,59 +19,6 @@ def check_valid_bot_token():
         print("Bot token loaded successfully.")
     else:
         print("Error: Bot token is not set.")
-
-
-async def live_ticker(context: ContextTypes.DEFAULT_TYPE):
-    global old_dfs
-    print("live ticker started")
-    # This is for testing
-    # df1 = pd.DataFrame({
-    #     'Meta': ['Warfenweg 1, 10247 Berlin', 'Kantstraße 1, 10623 Berlin'],
-    #     'Properties': [42, 55],
-    #     'Price-Tag': [450, 1300]
-    # })
-    #
-    # df2 = pd.DataFrame({
-    #     'Meta': ['Kantstraße 1, 10623 Berlin', 'Schlangenbader Str. 1, 14197 Berlin'],
-    #     'Properties': [55, 66],
-    #     'Price-Tag': [1300, 900]
-    # })
-
-    if old_dfs is None:
-        old_dfs = []
-        for association in housing_association:
-            old_dfs.append((association, run_scraping_job(association)))
-            # old_dfs.append((association, df1))
-
-    new_dfs = []
-    for association in housing_association:
-        new_dfs.append((association, run_scraping_job(association)))
-        # new_dfs.append((association, df2))
-
-    results = []
-    for i in range(len(new_dfs)):
-        assoc_name, new_df = new_dfs[i]
-        _, old_df = old_dfs[i]  # Only need the DataFrame from old_dfs
-        diff_df = new_df[~new_df.apply(tuple, 1).isin(old_df.apply(tuple, 1))]
-        if not diff_df.empty:
-            results.append((assoc_name, diff_df))
-
-    code_html = 'A new Apartment was found:'
-    for assoc_name, result in results:
-        if len(result.values) > 0:
-            code_html += (
-                f'\n\n Provider: {assoc_name}'
-                f'\n Address: {result["Meta"].values[0]}'
-                f'\n Properties: {result["Properties"].values[0]} m²'
-                f'\n Price: {result["Price-Tag"].values[0]} Euro\n'
-            )
-
-    response_text = code_html
-
-    if response_text != 'A new Apartment was found:':
-        await context.bot.send_message(context.job.chat_id, response_text)
-
-    old_dfs = new_dfs
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -184,6 +130,45 @@ async def stop_live_ticker(context: ContextTypes.DEFAULT_TYPE) -> str:
         return "I've stopped the live ticker. You will no longer receive notifications."
     else:
         return "Live ticker is not running."
+
+
+async def live_ticker(context: ContextTypes.DEFAULT_TYPE):
+    global old_dfs
+    print("live ticker started")
+
+    if old_dfs is None:
+        old_dfs = []
+        for association in housing_association:
+            old_dfs.append((association, run_scraping_job(association)))
+
+    new_dfs = []
+    for association in housing_association:
+        new_dfs.append((association, run_scraping_job(association)))
+
+    results = []
+    for i in range(len(new_dfs)):
+        assoc_name, new_df = new_dfs[i]
+        _, old_df = old_dfs[i]  # Only need the DataFrame from old_dfs
+        diff_df = new_df[~new_df.apply(tuple, 1).isin(old_df.apply(tuple, 1))]
+        if not diff_df.empty:
+            results.append((assoc_name, diff_df))
+
+    code_html = 'A new Apartment was found:'
+    for assoc_name, result in results:
+        if len(result.values) > 0:
+            code_html += (
+                f'\n\n Provider: {assoc_name}'
+                f'\n Address: {result["Meta"].values[0]}'
+                f'\n Properties: {result["Properties"].values[0]} m²'
+                f'\n Price: {result["Price-Tag"].values[0]} Euro\n'
+            )
+
+    response_text = code_html
+
+    if response_text != 'A new Apartment was found:':
+        await context.bot.send_message(context.job.chat_id, response_text)
+
+    old_dfs = new_dfs
 
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
