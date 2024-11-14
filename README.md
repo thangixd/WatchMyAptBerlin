@@ -1,7 +1,7 @@
 
 # WatchMyAptBerlin - Berlin Apartment Finder
 
-**WatchMyAptBerlin** is a powerful tool designed to help users quickly discover available apartments for rent in Berlin. The software continuously monitors apartment listings and sends real-time notifications via a Telegram bot, so you never miss an opportunity to apply for a new rental. Whether you're actively searching for a new home or just want to stay updated, **APP** streamlines the process, ensuring you're always one step ahead in the competitive Berlin rental market.
+**WatchMyAptBerlin** is a powerful tool designed to help users quickly discover available apartments for rent in Berlin. The software continuously monitors apartment listings and sends real-time notifications via a Telegram bot, so you never miss an opportunity to apply for a new rental. Whether you're actively searching for a new home or just want to stay updated, **WatchMyAptBerlin** streamlines the process, ensuring you're always one step ahead in the competitive Berlin rental market.
 
 ### Key Features
 
