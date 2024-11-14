@@ -29,7 +29,8 @@ housing_association = {
         "angebot-big-box",
         None,
         "angebot-title",
-        "angebot-address",  # Needs to be fixed, as the more appropriate div class is "screen-reader-text". However, there are two divs with the same class, so "find.next" is not reliable in this case.
+        "angebot-address",
+        # Needs to be fixed, as the more appropriate div class is "screen-reader-text". However, there are two divs with the same class, so "find.next" is not reliable in this case.
         'angebot-characteristics',
         "angebot-area",
         "angebot-kosten"

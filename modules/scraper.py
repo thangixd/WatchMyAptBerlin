@@ -102,4 +102,3 @@ class DataProcessor:
 
     def get_data(self):
         return self.df
-

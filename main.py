@@ -1,7 +1,7 @@
 from config import housing_association
 
-
 last_data = None
+
 
 def run_scraping_job(housing_key):
     global last_data
@@ -23,9 +23,10 @@ def run_scraping_job(housing_key):
     #     else:
     #         print("No change in data.")
 
-    #last_data = current_data
+    # last_data = current_data
 
     return current_data
+
 
 if __name__ == "__main__":
     run_scraping_job('Degewo')

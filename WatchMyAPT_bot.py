@@ -25,28 +25,29 @@ def check_valid_bot_token():
 async def live_ticker(context: ContextTypes.DEFAULT_TYPE):
     global old_dfs
     print("live ticker started")
-    df1 = pd.DataFrame({
-        'Meta': ['Warfenweg 1, 10247 Berlin', 'Kantstraße 1, 10623 Berlin'],
-        'Properties': [42, 55],
-        'Price-Tag': [450, 1300]
-    })
-
-    df2 = pd.DataFrame({
-        'Meta': ['Kantstraße 1, 10623 Berlin', 'Schlangenbader Str. 1, 14197 Berlin'],
-        'Properties': [55, 66],
-        'Price-Tag': [1300, 900]
-    })
+    # This is for testing
+    # df1 = pd.DataFrame({
+    #     'Meta': ['Warfenweg 1, 10247 Berlin', 'Kantstraße 1, 10623 Berlin'],
+    #     'Properties': [42, 55],
+    #     'Price-Tag': [450, 1300]
+    # })
+    #
+    # df2 = pd.DataFrame({
+    #     'Meta': ['Kantstraße 1, 10623 Berlin', 'Schlangenbader Str. 1, 14197 Berlin'],
+    #     'Properties': [55, 66],
+    #     'Price-Tag': [1300, 900]
+    # })
 
     if old_dfs is None:
         old_dfs = []
         for association in housing_association:
-            # old_dfs.append((association, run_scraping_job(association)))
-            old_dfs.append((association, df1))
+            old_dfs.append((association, run_scraping_job(association)))
+            # old_dfs.append((association, df1))
 
     new_dfs = []
     for association in housing_association:
-        # new_dfs.append((association, run_scraping_job(association)))
-        new_dfs.append((association, df2))
+        new_dfs.append((association, run_scraping_job(association)))
+        # new_dfs.append((association, df2))
 
     results = []
     for i in range(len(new_dfs)):
@@ -81,7 +82,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         'You can view all currently available apartments from specific providers by entering one of the following options: \"Degewo\", \"WBM\", or \"Gewobag\".\n\nTo receive instant notifications when a new apartment becomes available, activate the live ticker by typing \"start live ticker\". To stop these notifications, just type \"end live ticker\".'
-        )
+    )
 
 
 def handles_response(text: str) -> str:
