@@ -2,11 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from fake_useragent import UserAgent
+from requests.exceptions import ProxyError, SSLError, ConnectTimeout
 
 
 class WebScraper:
-    def __init__(self, base_url, target_class, pager_number=None, title_class=None, meta_class=None, tags_class=None,
-                 properties_class=None, price_class=None):
+    def __init__(self, base_url, target_class, pager_number=None, title_class=None, meta_class=None,
+                 tags_class=None, properties_class=None, price_class=None, proxy=None):
         self.base_url = base_url
         self.target_class = target_class
         self.pager_number = pager_number
@@ -15,24 +16,74 @@ class WebScraper:
         self.tags_class = tags_class
         self.properties_class = properties_class
         self.price_class = price_class
+        self.proxy = proxy
+        self.session = requests.Session()
 
-    def fetch_page(self, page_number=None):
+    def set_proxy(self, proxy):
+        """Set or update proxy configuration.
+
+        Args:
+            proxy (dict): Proxy configuration in the format:
+                {'http': 'http://user:pass@host:port',
+                 'https': 'https://user:pass@host:port'}
+        """
+        self.proxy = proxy
+
+    def test_proxy(self):
+        """Test if the proxy is working."""
+        if not self.proxy:
+            return False
+
+        try:
+            response = self.session.get(
+                'https://httpbin.org/ip',
+                proxies=self.proxy,
+                timeout=10
+            )
+            return response.status_code == 200
+        except (ProxyError, SSLError, ConnectTimeout) as e:
+            print(f"Proxy test failed: {str(e)}")
+            return False
+
+    def fetch_page(self, page_number=None, max_retries=3):
         """Fetches a page of HTML and returns a BeautifulSoup object.
-        Using a UserAgent to simulate a browser."""
+        Using a UserAgent to simulate a browser and proxy if configured."""
 
         url = f"{self.base_url}?page={page_number}" if page_number else self.base_url
         print(f"Fetching: {url}")
         user_agent = UserAgent().random
         headers = {'User-Agent': user_agent}
 
-        try:
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()  # Check if request was successful
-        except requests.exceptions.RequestException as e:
-            print(f"Error fetching page: {e}")
-            return None
+        for attempt in range(max_retries):
+            try:
+                response = self.session.get(
+                    url,
+                    headers=headers,
+                    proxies=self.proxy,
+                    timeout=30
+                )
+                response.raise_for_status()
+                return BeautifulSoup(response.content, 'html.parser')
 
-        return BeautifulSoup(response.content, 'html.parser')
+            except ProxyError as e:
+                print(f"Proxy error (attempt {attempt + 1}/{max_retries}): {str(e)}")
+                if attempt == max_retries - 1:
+                    print("Max retry attempts reached. Continuing without proxy...")
+                    try:
+                        response = self.session.get(url, headers=headers, timeout=10)
+                        response.raise_for_status()
+                        return BeautifulSoup(response.content, 'html.parser')
+                    except requests.exceptions.RequestException as e:
+                        print(f"Error fetching page without proxy: {str(e)}")
+                        return None
+
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching page (attempt {attempt + 1}/{max_retries}): {str(e)}")
+                if attempt == max_retries - 1:
+                    return None
+
+            import time
+            time.sleep(2 ** attempt)
 
     def scrape_page(self, page_number):
         soup = self.fetch_page(page_number)
